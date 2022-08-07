@@ -12,6 +12,20 @@
         pkgs = import nixpkgs { inherit system; };
 
         elixir = pkgs.beam.packages.erlang.elixir;
+        hex = pkgs.beam.packages.erlang.hex;
         locales = pkgs.glibcLocales;
-      in { devShell = pkgs.mkShell { buildInputs = [ elixir locales ]; }; });
+        rebar3 = pkgs.beam.packages.erlang.rebar3;
+      in {
+        devShell = pkgs.mkShell {
+          packages = [ elixir hex locales rebar3 ];
+
+          ERL_AFLAGS =
+            "-kernel shell_history enabled -kernel shell_history_file_bytes 1024000";
+
+          HEX_HOME = "./.cache/hex";
+
+          MIX_HOME = "./.cache/mix";
+          MIX_REBAR3 = "${rebar3}/bin/rebar3";
+        };
+      });
 }
