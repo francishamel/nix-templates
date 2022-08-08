@@ -19,12 +19,18 @@
         devShell = pkgs.mkShell {
           packages = [ elixir hex locales rebar3 ];
 
+          shellHook = ''
+            export MIX_HOME=$PWD/.cache/mix
+            export HEX_HOME=$PWD/.cache/hex
+            mkdir -p $MIX_HOME
+            mkdir -p $HEX_HOME
+            export PATH=$MIX_HOME/bin:$PATH
+            export PATH=$HEX_HOME/bin:$PATH
+          '';
+
           ERL_AFLAGS =
             "-kernel shell_history enabled -kernel shell_history_file_bytes 1024000";
 
-          HEX_HOME = "./.cache/hex";
-
-          MIX_HOME = "./.cache/mix";
           MIX_REBAR3 = "${rebar3}/bin/rebar3";
         };
       });
